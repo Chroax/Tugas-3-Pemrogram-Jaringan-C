@@ -1,0 +1,1 @@
+Maximum threads acquired: 12940

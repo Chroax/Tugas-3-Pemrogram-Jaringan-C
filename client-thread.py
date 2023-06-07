@@ -26,24 +26,24 @@ def kirim_data():
             amount_received += len(data)
             logging.warning(f"[DITERIMA DARI SERVER] {data}")
     finally:
-        logging.warning("===================")
         logging.warning("closing")
         global max_thread
         max_thread = max(max_thread,threading.active_count())
-        logging.warning("===================\n")
         sock.close()
     return
 
 
 if __name__=='__main__':
-    threads = []
-    for i in range(4):
+    count = 0
+    start = time.time()
+    while time.time() - start < 60:
         t = threading.Thread(target=kirim_data)
-        threads.append(t)
         t.start()
-    print("Thread Max Active: ", max_thread)
-    print("Thread Active Sekarang: ", threading.active_count())
-    for t in threads:
-       t.join()
-
+        t.join()
+        count += 1
+        
+    f = open('hasil-thread.txt', 'w')
+    f.write(f"Maximum threads acquired: {count}")
+    f.close
     
+    logging.warning(f"Thread Max Active: {count}")

@@ -2,8 +2,8 @@ import sys
 import socket
 import logging
 import time
-import threading
 from multiprocessing import Process
+import threading
 
 max_thread = 0
 def kirim_data():
@@ -27,24 +27,25 @@ def kirim_data():
             amount_received += len(data)
             logging.warning(f"[DITERIMA DARI SERVER] {data}")
     finally:
-        logging.warning("===================")
-        logging.warning("closing")
+        logging.warning("closing\n")
         global max_thread
         max_thread = max(max_thread,threading.active_count())
-        logging.warning("===================\n")
         sock.close()
     return
 
 
 if __name__=='__main__':
-    process = []
-    for i in range(4):
+    count = 0
+    start = time.time()
+    while time.time() - start < 60:
         proces = Process(target=kirim_data)
-        process.append(proces)
         proces.start()
-    print("process Max Active: ", max_thread)
-    print("processMax Active Sekarang: ", threading.active_count())
-    for proces in process:
-       proces.join()
-
+        proces.join()
+        
+        count += 1
+        
+    f = open('hasil-process.txt', 'w')
+    f.write(f"Maximum process acquired: {count}")
+    f.close
     
+    logging.warning(f"Process Max Active: {count}")   
